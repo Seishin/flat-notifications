@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import co.naughtyspirit.library.R;
 import co.naughtyspirit.library.interfaces.OnFragmentClose;
+import co.naughtyspirit.library.utils.Constants;
 
 /**
  * * Created by Seishin <atanas@naughtyspirit.co>
@@ -37,12 +38,16 @@ public class NotificationFragment extends Fragment {
     private RelativeLayout notificationLayout;
 
     private String message;
+    private int bgColor;
+    private int textColor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.message = getArguments().getString("msg");
+        this.message = getArguments().getString(Constants.KEY_MESSAGE);
+        this.bgColor = getArguments().getInt(Constants.KEY_BG_COLOR);
+        this.textColor = getArguments().getInt(Constants.KEY_TEXT_COLOR);
     }
 
     @Override
@@ -57,10 +62,13 @@ public class NotificationFragment extends Fragment {
     private void initUI() {
         messageTV = (TextView) view.findViewById(R.id.notification_text);
         messageTV.setText(message);
+        messageTV.setTextColor(textColor);
 
         notificationLayout = (RelativeLayout) view.findViewById(R.id.notification);
+        notificationLayout.setBackgroundColor(bgColor);
 
         Button dismiss = (Button) view.findViewById(R.id.dismiss);
+        dismiss.setTextColor(textColor);
         dismiss.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,24 +101,9 @@ public class NotificationFragment extends Fragment {
             return enterAnim;
         } else {
             Animation outAnim = AnimationUtils.loadAnimation(activity, R.anim.alpha_out);;
-            outAnim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    callback.onClose();
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
 
             notificationLayout.startAnimation(AnimationUtils.loadAnimation(activity,
                     R.anim.slide_out_top));
-
 
             return outAnim;
         }
@@ -126,5 +119,11 @@ public class NotificationFragment extends Fragment {
         } catch (ClassCastException e) {
             Log.e(TAG, e.toString());
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback.onClose();
     }
 }

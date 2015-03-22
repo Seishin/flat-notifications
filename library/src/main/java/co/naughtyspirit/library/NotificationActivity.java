@@ -2,6 +2,7 @@ package co.naughtyspirit.library;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import co.naughtyspirit.library.fragments.NotificationFragment;
 import co.naughtyspirit.library.interfaces.OnFragmentClose;
